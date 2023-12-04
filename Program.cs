@@ -1,0 +1,223 @@
+﻿using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace ExpenseTracker
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            string filePath;
+
+
+
+            DateTime currentDate = DateTime.Now;
+
+            // Append the current date to the file names
+            string formattedDate = currentDate.ToString("MM-yyyy");
+            
+
+            // Define file names 
+            string FoodtxtFileName = $"FoodTransactions_{formattedDate}.txt";
+            string FoodcsvFileName = $"FoodTransactions_{formattedDate}.csv";
+
+            string PetroltxtFileName = $"PetrolTransactions_{formattedDate}.txt";
+            string PetrolcsvFileName = $"PetrolTransactions_{formattedDate}.csv";
+
+
+
+
+            if (args.Length > 0)
+            {
+                // Use the file path provided as a command-line argument
+                filePath = args[0];
+            }
+            else
+            {
+                Console.Write("Please drag and drop the file here and press Enter: ");
+                filePath = Console.ReadLine().Trim('\"');
+            }
+
+            if (File.Exists(filePath))
+            {
+                // Get data 
+                List<FoodTransaction> FoodTransactions = GetFoodTransactions(filePath);
+               FoodTransaction[] FoodTransArray = FoodTransactions.ToArray();
+
+
+                List<PetrolTransaction> PetrolTransactions = GetPetrolTransactions(filePath);
+                PetrolTransaction[] PetrolTransArray = PetrolTransactions.ToArray();
+
+
+                // For loop to iterate through  food transactions array and print to console 
+                Console.Clear();
+                Console.WriteLine("-- Food  Expenditure  for the month -- ");
+                for (int i = 0; i < FoodTransArray.Length; i++)
+                {
+                    // Access the vendor property of each transaction
+                    Console.WriteLine(FoodTransArray[i].Date + " " + FoodTransArray[i].Vendor + " " + FoodTransArray[i].TransAmount);
+                }
+
+                // For loop to iterate through  Petrol  transactions array and print to console 
+                
+                Console.WriteLine("\n\n\n -- Petrol Expenditure  for the month -- ");
+                for (int i = 0; i < PetrolTransArray.Length; i++)
+                {
+                    // Access the vendor property of each transaction
+                    Console.WriteLine(PetrolTransArray[i].Date + " " + PetrolTransArray[i].Vendor + " " + PetrolTransArray[i].TransAmount);
+                }
+
+                // write food transaction data to file
+
+                using (StreamWriter writer = new StreamWriter(FoodtxtFileName))
+                {
+                    // Write headers to the file
+                    writer.WriteLine("Date,Transaction Amount");
+
+                    // Populate data
+                    foreach (FoodTransaction trans in FoodTransArray)
+                    {
+                        writer.WriteLine($"{trans.Date} {trans.TransAmount}");
+                    }
+                }
+
+                using (StreamWriter writer = new StreamWriter(FoodcsvFileName))
+                {
+                    // Write headers to the file
+                    writer.WriteLine("Date,Transaction Amount");
+
+                    // Populate data
+                    foreach (FoodTransaction trans in FoodTransArray)
+                    {
+                        writer.WriteLine($"{trans.Date},{trans.TransAmount}");
+                    }
+                }
+
+                // write petrol transaction data to file 
+
+                using (StreamWriter writer = new StreamWriter(PetroltxtFileName))
+                {
+                    // Write headers to the file
+                    writer.WriteLine("Date,Transaction Amount,Vendor");
+
+                    // Populate data
+                    foreach (PetrolTransaction trans in PetrolTransArray)
+                    {
+                        writer.WriteLine($"{trans.Date} {trans.TransAmount} {trans.Vendor}");
+                    }
+                }
+
+                using (StreamWriter writer = new StreamWriter(PetrolcsvFileName))
+                {
+                    // Write headers to the file
+                    writer.WriteLine("Date,Transaction Amount,Vendor");
+
+                    // Populate data
+                    foreach (PetrolTransaction trans in PetrolTransArray)
+                    {
+                        writer.WriteLine($"{trans.Date},{trans.TransAmount},{trans.Vendor}");
+                    }
+                }
+
+
+                Console.WriteLine("\n\n\n Data written to" + FoodcsvFileName);
+                Console.WriteLine("Data written to" +FoodtxtFileName);
+
+                Console.WriteLine("Data written to" + PetrolcsvFileName);
+                Console.WriteLine("Data written to" + PetroltxtFileName);
+            }
+            else
+            {
+                Console.WriteLine("File not found.");
+            }
+
+            Console.ReadKey();
+        }
+
+        // Get transaction data method 
+        public static List<FoodTransaction> GetFoodTransactions(string filePath)
+        {
+            // array of vendors to check 
+            string[] foodVendors =
+            {
+                "Pak N Save",
+                "CountDown",
+                "MCDONALDS",
+                "Dominos",
+                "NeW World",
+                "NewWorld"
+                
+            };
+
+            // Create a list to store transactions
+            List<FoodTransaction> FoodTransactionList = new List<FoodTransaction>();
+
+            // Read in file using stream reader 
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                while (!reader.EndOfStream)
+                {
+                    // Read in each line and store inside a variable for further processing
+                    string line = reader.ReadLine();
+                    string[] parts = line.Split(',');
+
+                    string transDate = parts[1];
+                    string vendor = parts[2];
+                    string transAMT = parts[13];
+
+                    // Create a new transaction using this data
+                    FoodTransaction trans = new FoodTransaction(transDate, vendor, transAMT);
+                    if (foodVendors.Any(foodVendor => vendor.Contains(foodVendor, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        FoodTransactionList.Add(trans);
+                    }
+                }
+            }
+
+            // Return the data 
+            return FoodTransactionList;
+        }
+
+
+
+        public static List<PetrolTransaction> GetPetrolTransactions(string filePath)
+        {
+            // array of vendors to check 
+            string[] petrolVendors =
+            {
+                "NPD"
+            };
+
+            // Create a list to store transactions
+            List<PetrolTransaction> PetrolTransactionList = new List<PetrolTransaction>();
+
+            // Read in file using stream reader 
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                while (!reader.EndOfStream)
+                {
+                    // Read in each line and store inside a variable for further processing
+                    string line = reader.ReadLine();
+                    string[] parts = line.Split(',');
+
+                    string transDate = parts[1];
+                    string vendor = parts[2];
+                    string transAMT = parts[13];
+
+                    // Create a new transaction using this data
+                    PetrolTransaction trans = new PetrolTransaction(transDate, vendor, transAMT);
+                    if (petrolVendors.Any(petrolVendor => vendor.Contains(petrolVendor, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        PetrolTransactionList.Add(trans);
+                    }
+                }
+            }
+
+            // Return the data 
+            return PetrolTransactionList;
+        }
+    }
+}

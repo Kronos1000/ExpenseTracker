@@ -159,6 +159,14 @@ namespace ExpenseTracker
                 
             };
 
+            string[] ignoreVendorList =
+            {
+                ".co.nz",
+                "WINZ",
+                "ZIP",
+
+            };
+
             // Create a list to store transactions
             List<FoodTransaction> FoodTransactionList = new List<FoodTransaction>();
 
@@ -201,6 +209,14 @@ namespace ExpenseTracker
 
             };
 
+            string[] ignoreVendorList =
+            {
+                ".co.nz",
+                "WINZ",
+                "ZIP",
+
+            };
+
             // Create a list to store transactions
             List<PetrolTransaction> PetrolTransactionList = new List<PetrolTransaction>();
 
@@ -219,7 +235,8 @@ namespace ExpenseTracker
 
                     // Create a new transaction using this data
                     PetrolTransaction trans = new PetrolTransaction(transDate, vendor, transAMT);
-                    if (petrolVendors.Any(petrolVendor => vendor.Contains(petrolVendor, StringComparison.OrdinalIgnoreCase)) &&  !vendor.Contains("WINZ") && !vendor.Contains(".co.nz"))
+                    if (petrolVendors.Any(petrolVendor => vendor.Contains(petrolVendor, StringComparison.OrdinalIgnoreCase))
+                  && !ignoreVendorList.Any(ignoreVendor => vendor.Contains(ignoreVendor, StringComparison.OrdinalIgnoreCase)))
                     {
                         PetrolTransactionList.Add(trans);
                     }

@@ -51,6 +51,9 @@ namespace ExpenseTracker
                 List<PetrolTransaction> PetrolTransactions = GetPetrolTransactions(filePath);
                 PetrolTransaction[] PetrolTransArray = PetrolTransactions.ToArray();
 
+                // Initialize total amounts
+                double totalFoodAmount = 0;
+                double totalPetrolAmount = 0;
 
                 // For loop to iterate through  food transactions array and print to console 
                 Console.Clear();
@@ -59,6 +62,7 @@ namespace ExpenseTracker
                 {
                     // Access the vendor property of each transaction
                     Console.WriteLine(FoodTransArray[i].Date + " " + FoodTransArray[i].Vendor + " " + FoodTransArray[i].TransAmount);
+                    totalFoodAmount += Convert.ToDouble(FoodTransArray[i].TransAmount);
                 }
 
                 // For loop to iterate through  Petrol  transactions array and print to console 
@@ -68,7 +72,9 @@ namespace ExpenseTracker
                 {
                     // Access the vendor property of each transaction
                     Console.WriteLine(PetrolTransArray[i].Date + " " + PetrolTransArray[i].Vendor + " " + PetrolTransArray[i].TransAmount);
-                }
+                    totalPetrolAmount += Convert.ToDouble(PetrolTransArray[i].TransAmount);
+                
+                 }
 
                 // write food transaction data to file
 
@@ -122,7 +128,8 @@ namespace ExpenseTracker
                     }
                 }
 
-
+                Console.WriteLine($"\nTotal Food Expenditure: ${totalFoodAmount:N2}");
+                Console.WriteLine($"Total Petrol Expenditure: ${totalPetrolAmount}");
                 Console.WriteLine("\n\n\n Data written to" + FoodcsvFileName);
                 Console.WriteLine("Data written to" +FoodtxtFileName);
 
@@ -188,7 +195,10 @@ namespace ExpenseTracker
             // array of vendors to check 
             string[] petrolVendors =
             {
-                "NPD"
+                "NPD",
+                "Z ",
+                " BP "
+
             };
 
             // Create a list to store transactions
@@ -209,7 +219,7 @@ namespace ExpenseTracker
 
                     // Create a new transaction using this data
                     PetrolTransaction trans = new PetrolTransaction(transDate, vendor, transAMT);
-                    if (petrolVendors.Any(petrolVendor => vendor.Contains(petrolVendor, StringComparison.OrdinalIgnoreCase)))
+                    if (petrolVendors.Any(petrolVendor => vendor.Contains(petrolVendor, StringComparison.OrdinalIgnoreCase)) &&  !vendor.Contains("WINZ") && !vendor.Contains(".co.nz"))
                     {
                         PetrolTransactionList.Add(trans);
                     }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace ExpenseTracker
 {
@@ -46,6 +47,9 @@ namespace ExpenseTracker
                 // Get data 
                 List<FoodTransaction> FoodTransactions = GetFoodTransactions(filePath);
                FoodTransaction[] FoodTransArray = FoodTransactions.ToArray();
+
+
+                // read array data from external files
 
 
                 List<PetrolTransaction> PetrolTransactions = GetPetrolTransactions(filePath);
@@ -147,25 +151,11 @@ namespace ExpenseTracker
         // Get transaction data method 
         public static List<FoodTransaction> GetFoodTransactions(string filePath)
         {
-            // array of vendors to check 
-            string[] foodVendors =
-            {
-                "Pak N Save",
-                "CountDown",
-                "MCDONALDS",
-                "Dominos",
-                "NeW World",
-                "NewWorld"
-                
-            };
 
-            string[] ignoreVendorList =
-            {
-                ".co.nz",
-                "WINZ",
-                "ZIP",
 
-            };
+            string[] foodVendors = File.ReadAllLines("FoodVendors.txt");
+
+            string  [] ignoreVendorList = File.ReadAllLines("VendorsToIgnore.txt");
 
             // Create a list to store transactions
             List<FoodTransaction> FoodTransactionList = new List<FoodTransaction>();
@@ -200,22 +190,10 @@ namespace ExpenseTracker
 
         public static List<PetrolTransaction> GetPetrolTransactions(string filePath)
         {
-            // array of vendors to check 
-            string[] petrolVendors =
-            {
-                "NPD",
-                "Z ",
-                " BP "
+           
+            string[] petrolVendors = File.ReadAllLines("PetrolVendors.txt");
+            string  [] ignoreVendorList = File.ReadAllLines("VendorsToIgnore.txt");
 
-            };
-
-            string[] ignoreVendorList =
-            {
-                ".co.nz",
-                "WINZ",
-                "ZIP",
-
-            };
 
             // Create a list to store transactions
             List<PetrolTransaction> PetrolTransactionList = new List<PetrolTransaction>();

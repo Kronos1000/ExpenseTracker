@@ -85,7 +85,7 @@ namespace ExpenseTracker
                 using (StreamWriter writer = new StreamWriter(FoodtxtFileName))
                 {
                     // Write headers to the file
-                    writer.WriteLine("Date,Transaction Amount");
+                    writer.WriteLine("Date,Vendor,Transaction Amount");
 
                     // Populate data
                     foreach (FoodTransaction trans in FoodTransArray)
@@ -97,12 +97,12 @@ namespace ExpenseTracker
                 using (StreamWriter writer = new StreamWriter(FoodcsvFileName))
                 {
                     // Write headers to the file
-                    writer.WriteLine("Date,Transaction Amount");
+                    writer.WriteLine("Date,Vendor,Transaction Amount");
 
                     // Populate data
                     foreach (FoodTransaction trans in FoodTransArray)
                     {
-                        writer.WriteLine($"{trans.Date},{trans.TransAmount}");
+                        writer.WriteLine($"{trans.Date},{trans.Vendor} {trans.TransAmount}");
                     }
                 }
 
@@ -116,19 +116,19 @@ namespace ExpenseTracker
                     // Populate data
                     foreach (PetrolTransaction trans in PetrolTransArray)
                     {
-                        writer.WriteLine($"{trans.Date} {trans.TransAmount} {trans.Vendor}");
+                        writer.WriteLine($"{trans.Date}  {trans.Vendor} {trans.TransAmount}");
                     }
                 }
 
                 using (StreamWriter writer = new StreamWriter(PetrolcsvFileName))
                 {
                     // Write headers to the file
-                    writer.WriteLine("Date,Transaction Amount,Vendor");
+                    writer.WriteLine("Date,Vendor,Transaction Amount");
 
                     // Populate data
                     foreach (PetrolTransaction trans in PetrolTransArray)
                     {
-                        writer.WriteLine($"{trans.Date},{trans.TransAmount},{trans.Vendor}");
+                        writer.WriteLine($"{trans.Date},{trans.Vendor},{trans.TransAmount}");
                     }
                 }
 

@@ -68,3 +68,4 @@ C:\Github\ExpenseTracker\obj\Debug\net6.0\refint\ExpenseTracker.dll
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.pdb
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.genruntimeconfig.cache
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ref\ExpenseTracker.dll
+D:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.sourcelink.json

@@ -102,7 +102,8 @@ namespace ExpenseTracker
                     // Populate data
                     foreach (FoodTransaction trans in FoodTransArray)
                     {
-                        writer.WriteLine($"{trans.Date},{trans.Vendor} {trans.TransAmount}");
+                        string VendorWithComma = trans.Vendor.Replace(';', ',');
+                        writer.WriteLine($"{trans.Date},{VendorWithComma} {trans.TransAmount}");
                     }
                 }
 
@@ -116,7 +117,7 @@ namespace ExpenseTracker
                     // Populate data
                     foreach (PetrolTransaction trans in PetrolTransArray)
                     {
-                        writer.WriteLine($"{trans.Date}  {trans.Vendor} {trans.TransAmount}");
+                        writer.WriteLine($"{trans.Date} {trans.Vendor} {trans.TransAmount}");
                     }
                 }
 
@@ -171,10 +172,11 @@ namespace ExpenseTracker
 
                     string transDate = parts[1];
                     string vendor = parts[2];
+
                     string transAMT = parts[13];
 
                     // Create a new transaction using this data
-                    FoodTransaction trans = new FoodTransaction(transDate, vendor, transAMT);
+                    FoodTransaction trans = new FoodTransaction(transDate, vendor ,transAMT);
                     if (foodVendors.Any(foodVendor => vendor.Contains(foodVendor, StringComparison.OrdinalIgnoreCase)))
                     {
                         FoodTransactionList.Add(trans);

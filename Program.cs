@@ -177,10 +177,14 @@ namespace ExpenseTracker
 
                     // Create a new transaction using this data
                     FoodTransaction trans = new FoodTransaction(transDate, vendor ,transAMT);
-                    if (foodVendors.Any(foodVendor => vendor.Contains(foodVendor, StringComparison.OrdinalIgnoreCase)))
+                   
+                    if (foodVendors.Any(foodVendor => vendor.Contains(foodVendor, StringComparison.OrdinalIgnoreCase))
+                        && !ignoreVendorList.Any(ignoreVendor => vendor.Contains(ignoreVendor, StringComparison.OrdinalIgnoreCase))
+                        && !vendor.Contains("FUEL", StringComparison.OrdinalIgnoreCase))
                     {
                         FoodTransactionList.Add(trans);
                     }
+
                 }
             }
 

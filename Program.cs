@@ -97,13 +97,13 @@ namespace ExpenseTracker
                 using (StreamWriter writer = new StreamWriter(FoodcsvFileName))
                 {
                     // Write headers to the file
-                    writer.WriteLine("Date,Vendor,Transaction Amount");
+                    writer.WriteLine("Date,Transaction Amount");
 
                     // Populate data
                     foreach (FoodTransaction trans in FoodTransArray)
                     {
                         string VendorWithComma = trans.Vendor.Replace(';', ',');
-                        writer.WriteLine($"{trans.Date},{VendorWithComma} {trans.TransAmount}");
+                        writer.WriteLine($"{trans.Date},{trans.TransAmount}");
                     }
                 }
 

@@ -1,4 +1,0 @@
-Date,Transaction Amount,Vendor
-07-03-2024 NZ SAFETY BLACKWOODS INVERCARGILL ; 9.66
-24-03-2024 Z Ashburton Ashburton ; 10.60
-28-03-2024 Z Bishopdale Bishopdale ; 14.93

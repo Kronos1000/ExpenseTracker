@@ -1,6 +1,0 @@
-Date,Transaction Amount,Vendor
-03-05-2024 NPD RANGIORA NPD RANGIORA ; 40.00
-06-05-2024 BP CONNECT RANGIORA RANGIORA ; 20.00
-07-05-2024 Pakn Save Fuel RangioraRangiora ; 19.09
-08-05-2024 Pakn Save Fuel RangioraRangiora ; 80.00
-12-05-2024 Pakn Save Fuel RangioraRangiora ; 89.34

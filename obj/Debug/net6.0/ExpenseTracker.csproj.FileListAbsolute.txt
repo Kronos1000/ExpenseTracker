@@ -62,10 +62,11 @@ C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.GeneratedMSBuildEditorC
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.AssemblyInfoInputs.cache
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.AssemblyInfo.cs
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.csproj.CoreCompileInputs.cache
-C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.csproj.CopyComplete
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.dll
 C:\Github\ExpenseTracker\obj\Debug\net6.0\refint\ExpenseTracker.dll
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.pdb
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.genruntimeconfig.cache
 C:\Github\ExpenseTracker\obj\Debug\net6.0\ref\ExpenseTracker.dll
 D:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.sourcelink.json
+C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseTracker.sourcelink.json
+C:\Github\ExpenseTracker\obj\Debug\net6.0\ExpenseT.567C5DF3.Up2Date

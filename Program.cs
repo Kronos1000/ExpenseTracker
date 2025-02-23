@@ -80,19 +80,6 @@ namespace ExpenseTracker
                 
                  }
 
-                // write food transaction data to file
-
-                using (StreamWriter writer = new StreamWriter(FoodtxtFileName))
-                {
-                    // Write headers to the file
-                    writer.WriteLine("Date,Vendor,Transaction Amount");
-
-                    // Populate data
-                    foreach (FoodTransaction trans in FoodTransArray)
-                    {
-                        writer.WriteLine($"{trans.Date} {trans.TransAmount}");
-                    }
-                }
 
                 using (StreamWriter writer = new StreamWriter(FoodcsvFileName))
                 {
@@ -107,44 +94,12 @@ namespace ExpenseTracker
                     }
                 }
 
-                // write petrol transaction data to file 
-
-                using (StreamWriter writer = new StreamWriter(PetroltxtFileName))
-                {
-                    // Write headers to the file
-                    writer.WriteLine("Date,Transaction Amount,Vendor");
-
-                    // Populate data
-                    foreach (PetrolTransaction trans in PetrolTransArray)
-                    {
-                        writer.WriteLine($"{trans.Date} {trans.Vendor} {trans.TransAmount}");
-                    }
-                }
-
-                using (StreamWriter writer = new StreamWriter(PetrolcsvFileName))
-                {
-                    // Write headers to the file
-                    writer.WriteLine("Date,Vendor,Transaction Amount");
-
-                    // Populate data
-                    foreach (PetrolTransaction trans in PetrolTransArray)
-                    {
-                        writer.WriteLine($"{trans.Date},{trans.Vendor},{trans.TransAmount}");
-                    }
-                }
 
                 Console.WriteLine($"\nTotal Food Expenditure: ${totalFoodAmount:N2}");
-                Console.WriteLine($"Total Petrol Expenditure: ${totalPetrolAmount}");
-                Console.WriteLine("\n\n\n Data written to" + FoodcsvFileName);
-                Console.WriteLine("Data written to" +FoodtxtFileName);
+               // Console.WriteLine($"Total Petrol Expenditure: ${totalPetrolAmount}");  // dont show petrol spend as patrick has a fuelcard 
 
-                Console.WriteLine("Data written to" + PetrolcsvFileName);
-                Console.WriteLine("Data written to" + PetroltxtFileName);
             }
-            else
-            {
-                Console.WriteLine("File not found.");
-            }
+        
 
             Console.ReadKey();
         }

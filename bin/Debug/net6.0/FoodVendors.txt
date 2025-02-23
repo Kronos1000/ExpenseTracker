@@ -1,4 +1,7 @@
 Pak N Save
+PakN Save
+PAKN Save
+PAK N SAVE
 CountDown
 MCDONALDS
 Dominos
@@ -7,3 +10,5 @@ NewWorld
 Wendys
 KHMER SATAY
 COUPLAND'S BAKERIES
+WOOLWORTHS
+Chemist Warehouse

@@ -1,8 +1,7 @@
-﻿using OfficeOpenXml;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace ExpenseTracker
 {
@@ -11,29 +10,14 @@ namespace ExpenseTracker
         static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
+
             string filePath;
 
-
-
             DateTime currentDate = DateTime.Now;
-
-            // Append the current date to the file names
             string formattedDate = currentDate.ToString("MM-yyyy");
-            
-
-            // Define file names 
-            string FoodtxtFileName = $"FoodTransactions_{formattedDate}.txt";
-            string FoodcsvFileName = $"FoodTransactions_{formattedDate}.csv";
-
-            string PetroltxtFileName = $"PetrolTransactions_{formattedDate}.txt";
-            string PetrolcsvFileName = $"PetrolTransactions_{formattedDate}.csv";
-
-
-
 
             if (args.Length > 0)
             {
-                // Use the file path provided as a command-line argument
                 filePath = args[0];
             }
             else
@@ -42,148 +26,114 @@ namespace ExpenseTracker
                 filePath = Console.ReadLine().Trim('\"');
             }
 
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
-                // Get data 
-                List<FoodTransaction> FoodTransactions = GetFoodTransactions(filePath);
-               FoodTransaction[] FoodTransArray = FoodTransactions.ToArray();
-
-
-                // read array data from external files
-
-
-                List<PetrolTransaction> PetrolTransactions = GetPetrolTransactions(filePath);
-                PetrolTransaction[] PetrolTransArray = PetrolTransactions.ToArray();
-
-                // Initialize total amounts
-                double totalFoodAmount = 0;
-                double totalPetrolAmount = 0;
-
-                // For loop to iterate through  food transactions array and print to console 
-                Console.Clear();
-                Console.WriteLine("-- Food  Expenditure  for the month -- ");
-                for (int i = 0; i < FoodTransArray.Length; i++)
-                {
-                    // Access the vendor property of each transaction
-                    Console.WriteLine(FoodTransArray[i].Date + " " + FoodTransArray[i].Vendor + " " + FoodTransArray[i].TransAmount);
-                    totalFoodAmount += Convert.ToDouble(FoodTransArray[i].TransAmount);
-                }
-
-                // For loop to iterate through  Petrol  transactions array and print to console 
-                
-                Console.WriteLine("\n\n\n -- Petrol Expenditure  for the month -- ");
-                for (int i = 0; i < PetrolTransArray.Length; i++)
-                {
-                    // Access the vendor property of each transaction
-                    Console.WriteLine(PetrolTransArray[i].Date + " " + PetrolTransArray[i].Vendor + " " + PetrolTransArray[i].TransAmount);
-                    totalPetrolAmount += Convert.ToDouble(PetrolTransArray[i].TransAmount);
-                
-                 }
-
-
-                using (StreamWriter writer = new StreamWriter(FoodcsvFileName))
-                {
-                    // Write headers to the file
-                    writer.WriteLine("Date,Transaction Amount");
-
-                    // Populate data
-                    foreach (FoodTransaction trans in FoodTransArray)
-                    {
-                        string VendorWithComma = trans.Vendor.Replace(';', ',');
-                        writer.WriteLine($"{trans.Date},{trans.TransAmount}");
-                    }
-                }
-
-
-                Console.WriteLine($"\nTotal Food Expenditure: ${totalFoodAmount:N2}");
-               // Console.WriteLine($"Total Petrol Expenditure: ${totalPetrolAmount}");  // dont show petrol spend as patrick has a fuelcard 
-
+                Console.WriteLine("File not found.");
+                return;
             }
-        
 
+            List<FoodTransaction> foodTransactions = GetFoodTransactions(filePath);
+            List<PetrolTransaction> petrolTransactions = GetPetrolTransactions(filePath);
+
+            double totalFoodAmount = 0;
+            double totalPetrolAmount = 0;
+
+            Console.Clear();
+            Console.WriteLine("-- Food Expenditure for the month --");
+
+            foreach (var trans in foodTransactions)
+            {
+                DateTime date = DateTime.Parse(trans.Date);
+                double amount = Math.Abs(Convert.ToDouble(trans.TransAmount));
+
+                Console.WriteLine($"{date:dd/MM/yyyy} {trans.Vendor} {amount:N2}");
+                totalFoodAmount += amount;
+            }
+
+            Console.WriteLine("\n-- Petrol Expenditure for the month --");
+
+            foreach (var trans in petrolTransactions)
+            {
+                DateTime date = DateTime.Parse(trans.Date);
+                double amount = Math.Abs(Convert.ToDouble(trans.TransAmount));
+
+                Console.WriteLine($"{date:dd/MM/yyyy} {trans.Vendor} {amount:N2}");
+                totalPetrolAmount += amount;
+            }
+
+            Console.WriteLine($"\nTotal Food Expenditure: ${totalFoodAmount:N2}");
+            Console.WriteLine($"Total Petrol Expenditure: ${totalPetrolAmount:N2}");
             Console.ReadKey();
         }
 
-        // Get transaction data method 
+        // ---------------- FOOD ----------------
         public static List<FoodTransaction> GetFoodTransactions(string filePath)
         {
-
-
             string[] foodVendors = File.ReadAllLines("FoodVendors.txt");
 
-            string  [] ignoreVendorList = File.ReadAllLines("VendorsToIgnore.txt");
+            List<FoodTransaction> list = new List<FoodTransaction>();
 
-            // Create a list to store transactions
-            List<FoodTransaction> FoodTransactionList = new List<FoodTransaction>();
-
-            // Read in file using stream reader 
             using (StreamReader reader = new StreamReader(filePath))
             {
                 while (!reader.EndOfStream)
                 {
-                    // Read in each line and store inside a variable for further processing
                     string line = reader.ReadLine();
                     string[] parts = line.Split(',');
 
-                    string transDate = parts[1];
-                    string vendor = parts[2];
+                    if (parts.Length < 14)
+                        continue;
 
+                    string transDate = parts[1];
+                    string vendor = parts[3];
                     string transAMT = parts[13];
 
-                    // Create a new transaction using this data
-                    FoodTransaction trans = new FoodTransaction(transDate, vendor ,transAMT);
-                   
-                    if (foodVendors.Any(foodVendor => vendor.Contains(foodVendor, StringComparison.OrdinalIgnoreCase))
-                        && !ignoreVendorList.Any(ignoreVendor => vendor.Contains(ignoreVendor, StringComparison.OrdinalIgnoreCase))
-                        && !vendor.Contains("FUEL", StringComparison.OrdinalIgnoreCase))
-                    {
-                        FoodTransactionList.Add(trans);
-                    }
+                    bool isFoodVendor =
+                        foodVendors.Any(v => vendor.Contains(v, StringComparison.OrdinalIgnoreCase));
 
+                    // 🔑 FOOD OVERRIDES IGNORE LIST
+                    if (isFoodVendor && !vendor.Contains("FUEL", StringComparison.OrdinalIgnoreCase))
+                    {
+                        list.Add(new FoodTransaction(transDate, vendor, transAMT));
+                    }
                 }
             }
 
-            // Return the data 
-            return FoodTransactionList;
+            return list;
         }
 
-
-
+        // ---------------- PETROL ----------------
         public static List<PetrolTransaction> GetPetrolTransactions(string filePath)
         {
-           
             string[] petrolVendors = File.ReadAllLines("PetrolVendors.txt");
-            string  [] ignoreVendorList = File.ReadAllLines("VendorsToIgnore.txt");
+            string[] ignoreVendorList = File.ReadAllLines("VendorsToIgnore.txt");
 
+            List<PetrolTransaction> list = new List<PetrolTransaction>();
 
-            // Create a list to store transactions
-            List<PetrolTransaction> PetrolTransactionList = new List<PetrolTransaction>();
-
-            // Read in file using stream reader 
             using (StreamReader reader = new StreamReader(filePath))
             {
                 while (!reader.EndOfStream)
                 {
-                    // Read in each line and store inside a variable for further processing
                     string line = reader.ReadLine();
                     string[] parts = line.Split(',');
 
+                    if (parts.Length < 14)
+                        continue;
+
                     string transDate = parts[1];
-                    string vendor = parts[2];
+                    string vendor = parts[3];
                     string transAMT = parts[13];
 
-                    // Create a new transaction using this data
-                    PetrolTransaction trans = new PetrolTransaction(transDate, vendor, transAMT);
-                    if (petrolVendors.Any(petrolVendor => vendor.Contains(petrolVendor, StringComparison.OrdinalIgnoreCase))
-                  && !ignoreVendorList.Any(ignoreVendor => vendor.Contains(ignoreVendor, StringComparison.OrdinalIgnoreCase)))
+                    if (
+                        petrolVendors.Any(v => vendor.Contains(v, StringComparison.OrdinalIgnoreCase)) &&
+                        !ignoreVendorList.Any(v => vendor.Contains(v, StringComparison.OrdinalIgnoreCase))
+                    )
                     {
-                        PetrolTransactionList.Add(trans);
+                        list.Add(new PetrolTransaction(transDate, vendor, transAMT));
                     }
                 }
             }
 
-            // Return the data 
-            return PetrolTransactionList;
+            return list;
         }
     }
 }
